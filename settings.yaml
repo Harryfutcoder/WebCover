@@ -1,0 +1,2769 @@
+default_profile: github-drl-1agent-observation
+default_output_path: ./webtest_output/result
+default_model_path: ./webtest_model
+default_session: test_session
+default_restart_interval: 60
+default_continuous_restart_threshold: 5
+default_enable_screen_shot: True
+
+profiles:
+ # 单智能体 DQN（DRLagent�? 观测；alive_time�?0800=3小时
+ github-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    # Edit if needed: copy chromedriver + Chrome next to repo, or set your absolute paths.
+    # Example (old machine): C:/webcover-assets/chrome/chrome.exe
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://github.com
+    domains:
+      - www.github.com
+      - github.com
+    # Headless stability (old Chrome + heavy pages like github.com)
+    browser_arguments:
+      # Use new headless + disable WebGL to avoid GPU ReadPixels / gl_utils spam on Windows
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ github-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://github.com
+    domains:
+      - www.github.com
+      - github.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ # --- GitHub: Random baseline ---
+ github-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://github.com
+    domains:
+      - www.github.com
+      - github.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ # ====================================================================
+ # PetClinic profiles (deploy first, e.g.:
+ #   docker run -d -p 8080:8080 springcommunity/spring-petclinic)
+ # ====================================================================
+
+ petclinic-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8081
+    domains:
+      - localhost:8081
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ petclinic-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8081
+    domains:
+      - localhost:8081
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ petclinic-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8081
+    domains:
+      - localhost:8081
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ github-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://github.com
+    domains:
+      - www.github.com
+      - github.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ # --- PetClinic: Q-Learning baseline ---
+ petclinic-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8081
+    domains:
+      - localhost:8081
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ petclinic-subweb-frontier-a2c-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8081
+    domains:
+      - localhost:8081
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.subweb_frontier_a2c_agent
+      class: SubWebFrontierA2CAgent
+      params:
+        input_dim: 52
+        hidden_dim: 128
+        learning_rate: 0.001
+        gamma: 1.0
+        entropy_coef: 0.01
+        value_coef: 0.5
+        max_grad_norm: 0.5
+        rollout_len: 32
+        advantage_estimator: n_step
+        gae_lambda: 0.95
+        update_epochs: 3
+        graph_residual_aux: true
+        graph_residual_aux_coef: 0.2
+        graph_residual_aux_target: uncovered
+        graph_residual_aux_distribution: uniform
+        max_actions: 512
+        max_actions_hard_cap: 1024
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+
+ # --- toppr.com profiles ---
+ toppr-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.toppr.com
+    domains:
+      - toppr.com
+      - www.toppr.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ toppr-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.toppr.com
+    domains:
+      - toppr.com
+      - www.toppr.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ toppr-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.toppr.com
+    domains:
+      - toppr.com
+      - www.toppr.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ vuestic-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://vuestic.dev
+    domains:
+      - vuestic.dev
+      - www.vuestic.dev
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ vuestic-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://vuestic.dev
+    domains:
+      - vuestic.dev
+      - www.vuestic.dev
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ vuestic-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://vuestic.dev
+    domains:
+      - vuestic.dev
+      - www.vuestic.dev
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ smadex-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.smadex.com
+    domains:
+      - smadex.com
+      - www.smadex.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ smadex-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.smadex.com
+    domains:
+      - smadex.com
+      - www.smadex.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ eatingwell-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.eatingwell.com
+    domains:
+      - eatingwell.com
+      - www.eatingwell.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ eatingwell-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.eatingwell.com
+    domains:
+      - eatingwell.com
+      - www.eatingwell.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ vuestic-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://vuestic.dev
+    domains:
+      - vuestic.dev
+      - www.vuestic.dev
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ # --- smadex.com additional baselines ---
+ smadex-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.smadex.com
+    domains:
+      - smadex.com
+      - www.smadex.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ smadex-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.smadex.com
+    domains:
+      - smadex.com
+      - www.smadex.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ # --- eatingwell.com additional baselines ---
+ eatingwell-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.eatingwell.com
+    domains:
+      - eatingwell.com
+      - www.eatingwell.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ eatingwell-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: https://www.eatingwell.com
+    domains:
+      - eatingwell.com
+      - www.eatingwell.com
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ splittypie-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:4200
+    domains:
+      - localhost:4200
+      - localhost
+      - 127.0.0.1
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ splittypie-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:4200
+    domains:
+      - localhost:4200
+      - localhost
+      - 127.0.0.1
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ splittypie-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:4200
+    domains:
+      - localhost:4200
+      - localhost
+      - 127.0.0.1
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ splittypie-subweb-frontier-a2c-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:4200
+    domains:
+      - localhost:4200
+      - localhost
+      - 127.0.0.1
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.subweb_frontier_a2c_agent
+      class: SubWebFrontierA2CAgent
+      params:
+        input_dim: 52
+        hidden_dim: 128
+        learning_rate: 0.001
+        gamma: 1.0
+        entropy_coef: 0.01
+        value_coef: 0.5
+        max_grad_norm: 0.5
+        rollout_len: 32
+        advantage_estimator: n_step
+        gae_lambda: 0.95
+        update_epochs: 3
+        graph_residual_aux: true
+        graph_residual_aux_coef: 0.2
+        graph_residual_aux_target: uncovered
+        graph_residual_aux_distribution: uniform
+        max_actions: 512
+        max_actions_hard_cap: 1024
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+
+ splittypie-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:4200
+    domains:
+      - localhost:4200
+      - localhost
+      - 127.0.0.1
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ agilefant-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8084/agilefant
+    domains:
+      - localhost:8084
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ agilefant-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8084/agilefant
+    domains:
+      - localhost:8084
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ agilefant-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8084/agilefant
+    domains:
+      - localhost:8084
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ agilefant-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:8084/agilefant
+    domains:
+      - localhost:8084
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ gadael-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3001
+    domains:
+      - localhost:3001
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ gadael-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3001
+    domains:
+      - localhost:3001
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ gadael-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3001
+    domains:
+      - localhost:3001
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ gadael-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3001
+    domains:
+      - localhost:3001
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ timeoff-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3002
+    domains:
+      - localhost:3002
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ timeoff-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3002
+    domains:
+      - localhost:3002
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ timeoff-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3002
+    domains:
+      - localhost:3002
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ timeoff-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3002
+    domains:
+      - localhost:3002
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ 4gaboards-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    entry_url: http://localhost:3000
+    domains:
+      - localhost:3000
+      - localhost
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ 4gaboards-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:3000
+    domains:
+      - localhost:3000
+      - localhost
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ 4gaboards-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:3000
+    domains:
+      - localhost:3000
+      - localhost
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ 4gaboards-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:3000
+    domains:
+      - localhost:3000
+      - localhost
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ nextcloud-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:8082/apps/files/
+    domains:
+      - localhost:8082
+      - localhost
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ nextcloud-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:8082/apps/files/
+    domains:
+      - localhost:8082
+      - localhost
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ nextcloud-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:8082/apps/files/
+    domains:
+      - localhost:8082
+      - localhost
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ nextcloud-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:8082/apps/files/
+    domains:
+      - localhost:8082
+      - localhost
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8
+
+ nextcloud-subweb-frontier-a2c-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:8082/apps/files/
+    domains:
+      - localhost:8082
+      - localhost
+    agent:
+      module: agent.impl.subweb_frontier_a2c_agent
+      class: SubWebFrontierA2CAgent
+      params:
+        input_dim: 52
+        hidden_dim: 128
+        learning_rate: 0.001
+        gamma: 1.0
+        entropy_coef: 0.01
+        value_coef: 0.5
+        max_grad_norm: 0.5
+        rollout_len: 32
+        advantage_estimator: n_step
+        gae_lambda: 0.95
+        update_epochs: 3
+        graph_residual_aux: true
+        graph_residual_aux_coef: 0.2
+        graph_residual_aux_target: uncovered
+        graph_residual_aux_distribution: uniform
+        max_actions: 512
+        max_actions_hard_cap: 1024
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+
+ realworld-drl-1agent-observation:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:4203
+    domains:
+      - localhost:4203
+      - localhost
+    agent:
+      module: agent.impl.drl_agent
+      class: DRLagent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ realworld-webexplor-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:4203
+    domains:
+      - localhost:4203
+      - localhost
+    agent:
+      module: agent.impl.webexplor_agent
+      class: WebExplorAgent
+      params:
+        model_module: model.dense_net
+        model_class: DenseNet
+        algo_type: DQN
+        model_load_type: new
+        model_load_name: placeholder.pt
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+        reward_function: A
+        batch_size: 32
+        learning_rate: 0.001
+        gamma: 0.5
+        max_random: 0.9
+        min_random: 0.3
+        update_target_interval: 8
+        update_network_interval: 4
+        stop_update: false
+
+ realworld-random-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:4203
+    domains:
+      - localhost:4203
+      - localhost
+    agent:
+      module: agent.impl.random_agent
+      class: RandomAgent
+      params: {}
+
+ realworld-subweb-frontier-a2c-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:4203
+    domains:
+      - localhost:4203
+      - localhost
+    agent:
+      module: agent.impl.subweb_frontier_a2c_agent
+      class: SubWebFrontierA2CAgent
+      params:
+        input_dim: 52
+        hidden_dim: 128
+        learning_rate: 0.001
+        gamma: 1.0
+        entropy_coef: 0.01
+        value_coef: 0.5
+        max_grad_norm: 0.5
+        rollout_len: 32
+        advantage_estimator: n_step
+        gae_lambda: 0.95
+        update_epochs: 3
+        graph_residual_aux: true
+        graph_residual_aux_coef: 0.2
+        graph_residual_aux_target: uncovered
+        graph_residual_aux_distribution: uniform
+        max_actions: 512
+        max_actions_hard_cap: 1024
+        transformer_module: transformer.impl.tag_transformer
+        transformer_class: TagTransformer
+
+ realworld-qlearning-1agent:
+    agent_num: 1
+    record_interval: 60
+    alive_time: 3600
+    page_load_timeout: 60
+    browser_path: C:/webcover-assets/chrome/chrome.exe
+    browser_data_path: ./chrome_data
+    driver_path: C:/webcover-assets/chromedriver.exe
+    resources_path: ./resources
+    browser_arguments:
+      - --headless=new
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --no-sandbox
+      - --window-size=1920,1080
+      - --disable-background-networking
+      - --log-level=3
+    action_detector:
+      module: action.detector.combination_detector
+      class: CombinationDetector
+      detectors:
+        - module: action.detector.click_action_detector
+          class: ClickActionDetector
+        - module: action.detector.random_input_action_detector
+          class: RandomInputActionDetector
+        - module: action.detector.random_select_action_detector
+          class: RandomSelectActionDetector
+    state:
+      module: state.impl.action_set_with_execution_times_state
+      class: ActionSetWithExecutionTimesState
+    entry_url: http://localhost:4203
+    domains:
+      - localhost:4203
+      - localhost
+    agent:
+      module: agent.impl.q_learning_agent
+      class: QLearningAgent
+      params:
+        agent_type: W
+        alpha: 0.1
+        gamma: 0.5
+        epsilon: 0.5
+        initial_q_value: 10.0
+        r_reward: 1.0
+        r_penalty: -1.0
+        max_sim_line: 0.8

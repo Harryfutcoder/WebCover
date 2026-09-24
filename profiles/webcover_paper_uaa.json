@@ -1,0 +1,57 @@
+{
+  "profile_id": "webcover-paper-uniform-uaa-v2",
+  "baseline": "subweb-frontier-a2c",
+  "environment": {
+    "WEBTEST_ROLLOUT_LEN": "64",
+    "WEBTEST_A2C_ADVANTAGE_ESTIMATOR": "gae",
+    "WEBTEST_A2C_GAE_LAMBDA": "0.98",
+    "WEBTEST_A2C_POLICY_BASELINE": "critic",
+    "WEBTEST_A2C_GAMMA": "1.0",
+    "WEBTEST_A2C_UPDATE_EPOCHS": "3",
+    "WEBTEST_A2C_LR": "0.001",
+    "WEBTEST_A2C_ENTROPY_COEF": "0.01",
+    "WEBTEST_A2C_VALUE_COEF": "0.5",
+    "WEBTEST_A2C_MAX_GRAD_NORM": "0.5",
+    "WEBTEST_A2C_SEPARATE_GRAD_CLIP": "1",
+    "WEBTEST_A2C_NORMALIZE_ADVANTAGE": "1",
+    "WEBTEST_SUBWEB_REWARD_MODE": "marginal",
+    "WEBTEST_SUBWEB_OPTIMIZER": "a2c",
+    "WEBTEST_SUBWEB_POLICY_INPUT_MODE": "augmented",
+    "WEBTEST_SUBWEB_STRUCTURAL_ACTION_FEATURES": "1",
+    "WEBTEST_SUBWEB_ACTION_COVERAGE_FEATURES": "1",
+    "WEBTEST_MAX_ACTIONS": "512",
+    "WEBTEST_GRAPH_NODE_MODE": "agent_state",
+    "WEBTEST_GRAPH_EDGE_LABEL_MODE": "observer_action",
+    "WEBTEST_GRAPH_NODE_WEIGHT": "1.0",
+    "WEBTEST_GRAPH_EDGE_ALPHA": "1.0",
+    "WEBTEST_GRAPH_EDGE_WEIGHT_MODE": "home_zero",
+    "WEBTEST_GRAPH_FILTER_TEMPLATE_EDGES": "0",
+    "WEBTEST_GRAPH_RESIDUAL_AUX_COEF": "0.2",
+    "WEBTEST_GRAPH_RESIDUAL_AUX_TARGET": "uncovered",
+    "WEBTEST_GRAPH_RESIDUAL_AUX_TARGET_POWER": "1.0",
+    "WEBTEST_GRAPH_RESIDUAL_AUX_DISTRIBUTION": "uniform",
+    "WEBTEST_GRAPH_RESIDUAL_AUX_TIE_BREAK_COEF": "0.0",
+    "WEBTEST_CANDIDATE_Q_AUX": "0",
+    "WEBTEST_REWARD_CLIP_ABS": "0",
+    "WEBTEST_ALIVE_TIME_OVERRIDE": "3600",
+    "WEBTEST_MAX_TRANSITIONS": "2200"
+  },
+  "sites": {
+    "petclinic": {
+      "url": "http://localhost:8081",
+      "expected_http_500_urls": ["http://localhost:8081/oups"]
+    },
+    "splittypie": {
+      "url": "http://localhost:4200",
+      "expected_http_500_urls": []
+    },
+    "nextcloud": {
+      "url": "http://localhost:8082/apps/files/",
+      "expected_http_500_urls": []
+    },
+    "realworld": {
+      "url": "https://demo.realworld.show",
+      "expected_http_500_urls": []
+    }
+  }
+}

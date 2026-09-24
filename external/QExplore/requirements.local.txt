@@ -1,0 +1,23 @@
+# Minimal dependency list inferred from QExplore_ENV.txt and source imports.
+# Prefer installing into a dedicated qexplore environment, not the active
+# webtest-python experiment environment.
+apted==1.0.3
+beautifulsoup4==4.8.0
+cryptohash==1.0.5
+exrex==0.10.5
+gensim==3.8.3
+gooey==1.0.3
+js-regex==1.0.1
+matplotlib==3.1.1
+nltk==3.4.5
+num2words==0.5.10
+numpy==1.17.2
+pandas==0.25.1
+prettytable==2.0.0
+pyenchant==3.1.1
+requests==2.22.0
+scikit-learn==0.21.3
+selenium==3.141.0
+sister==0.1.10
+tqdm==4.36.1
+wordninja==2.0.0

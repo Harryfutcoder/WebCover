@@ -1,0 +1,99 @@
+{
+  "notes": [
+    "Local target map for running QExplore as a separate external baseline.",
+    "Targets mirror the current WebExplor/SubGraph site entry URLs where possible.",
+    "QExplore only supports a simple url/baseurl/login_urls/username/password interface; complex pre-login profiles from the main repo are not imported here."
+  ],
+  "sites": [
+    {
+      "site": "odoo",
+      "url": "https://runbot.odoo.com/",
+      "baseurl": "odoo.com",
+      "login_urls": "",
+      "username": "",
+      "password": "",
+      "notes": "Matches the current faithful WebExplor paper target, not the older local localhost:8069 target."
+    },
+    {
+      "site": "4gaboards",
+      "url": "http://localhost:3000",
+      "baseurl": "localhost:3000",
+      "login_urls": "",
+      "username": "",
+      "password": "",
+      "notes": "Local Docker target."
+    },
+    {
+      "site": "github",
+      "url": "https://github.com",
+      "baseurl": "github.com",
+      "login_urls": "",
+      "username": "",
+      "password": "",
+      "notes": "Public target; keep scope to github.com."
+    },
+    {
+      "site": "petclinic",
+      "url": "http://localhost:8081",
+      "baseurl": "localhost:8081",
+      "login_urls": "",
+      "username": "",
+      "password": "",
+      "notes": "Local PetClinic target."
+    },
+    {
+      "site": "agilefant",
+      "url": "http://localhost:8084/agilefant",
+      "baseurl": "localhost:8084",
+      "login_urls": "http://localhost:8084/agilefant/login",
+      "username": "",
+      "password": "",
+      "notes": "QExplore may need credentials if the login page blocks exploration."
+    },
+    {
+      "site": "splittypie",
+      "url": "http://localhost:4200",
+      "baseurl": "localhost:4200",
+      "login_urls": "",
+      "username": "",
+      "password": "",
+      "notes": "Loop-heavy site signal is expected; judge by graph growth and route behavior."
+    },
+    {
+      "site": "realworld",
+      "url": "https://demo.realworld.show",
+      "baseurl": "demo.realworld.show",
+      "login_urls": "",
+      "username": "",
+      "password": "",
+      "notes": "Public demo target; previous probes were flaky, so run only after current experiments finish."
+    },
+    {
+      "site": "nextcloud",
+      "url": "http://localhost:8082/apps/files/",
+      "baseurl": "localhost:8082",
+      "login_urls": "http://localhost:8082/login",
+      "username": "admin",
+      "password": "",
+      "notes": "Local Docker target; credentials match the current benchmark deployment. QExplore still uses its own generic login/input logic."
+    },
+    {
+      "site": "gadael",
+      "url": "http://localhost:3001",
+      "baseurl": "localhost:3001",
+      "login_urls": "http://localhost:3001/#/login",
+      "username": "",
+      "password": "",
+      "notes": "Local Docker target; QExplore may not understand the hash-router login flow without extra handling."
+    },
+    {
+      "site": "timeoff",
+      "url": "http://localhost:3002",
+      "baseurl": "localhost:3002",
+      "login_urls": "http://localhost:3002/login",
+      "username": "",
+      "password": "",
+      "notes": "Local Docker target; QExplore may need credentials if login blocks exploration."
+    }
+  ]
+}
