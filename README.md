@@ -5,6 +5,13 @@ This first upload intentionally preserves a broad set of code and utilities for
 subsequent cleanup. It is **not yet a finalized, independently reproduced paper
 artifact**. Historical utilities are not all part of the paper configuration.
 
+## Paper
+
+The submitted manuscript is available as
+[icse2027-paper2190.pdf](paper/icse2027-paper2190.pdf).
+The PDF is preserved as supplied; it is not an updated account of this working
+source snapshot or the ongoing experiments.
+
 ## Contents
 
 - `agent/`, `model/`, `state/`, `action/`, `transformer/`: policies, coverage-aware
@@ -54,7 +61,7 @@ target modes are preserved for inspection, not silently relabeled as uniform.
 
 ## Data and Scope
 
-Raw results, browser logs, credentials, private campaign records, the paper PDF,
+Raw results, browser logs, credentials, private campaign records,
 and large downloaded assets are not in this source snapshot. Existing experiment
 data remain in their original local directories. No active experiment was moved
 to this checkout. Unique transitions use `(source, action, destination)`;
@@ -62,4 +69,3 @@ interactions count all recorded transition entries. Coverage and browser errors
 are distinct measurements; an error log entry is not a confirmed defect.
 
 See `THIRD_PARTY_NOTICES.md` and the retained licenses before redistribution.
-

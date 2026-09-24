@@ -24,6 +24,7 @@ logs/
 *.safetensors
 *.onnx
 *.pdf
+!/paper/icse2027-paper2190.pdf
 *.pem
 *.key
 chromedriver.exe
@@ -36,4 +37,3 @@ htmlcov/
 *.local.ps1
 *.local.yaml
 *.local.yml
-
